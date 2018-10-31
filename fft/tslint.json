@@ -1,0 +1,119 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-eslint-rules",
+    "tslint-consistent-codestyle"
+  ],
+  "rulesDirectory": "node_modules/tslint-microsoft-contrib",
+  "rules": {
+    "max-classes-per-file": [
+      false
+    ],
+    "no-console": {
+      "severity": "warning",
+      "options": [
+        "debug",
+        "info",
+        "log",
+        "time",
+        "timeEnd",
+        "trace"
+      ]
+    },
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "no-inferrable-types": [
+      true
+    ],
+    "typedef": [
+      true,
+      "call-signature",
+      "arrow-call-signature",
+      "parameter",
+      "arrow-parameter",
+      "property-declaration",
+      "object-destructuring",
+      "array-destructuring"
+    ],
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "mocha-avoid-only": true,
+    "no-as-type-assertion": [
+      true
+    ],
+    "no-angle-bracket-type-assertion": false,
+    "no-unused": [
+      false,
+      "unused-function-expression-name"
+    ],
+    "no-irregular-whitespace": true,
+
+    "no-relative-imports": true,
+    "ter-arrow-body-style": [
+      true,
+      "as-needed",
+      {
+        "requireReturnForObjectLiteral": true
+      }
+    ],
+    "ter-arrow-parens": [
+      true,
+      "as-needed",
+      {
+        "requireForBlockBody": true
+      }
+    ],
+    "ter-arrow-spacing": [
+      true
+    ],
+    "ter-indent": [
+      true,
+      2,
+      {
+        "SwitchCase": 1,
+        "outerIIFEBody": 0,
+        "MemberExpression": 1,
+        "FunctionDeclaration": {
+          "body": 1,
+          "parameters": 1
+        },
+        "FunctionExpression": {
+          "body": 1,
+          "parameters": 1
+        },
+        "CallExpression": {
+          "arguments": 1
+        }
+      }
+    ],
+    "no-multi-spaces": [
+      true,
+      {
+        "exceptions": {
+          "PropertyAssignment": false
+        }
+      }
+    ],
+    "object-curly-spacing": [
+      true,
+      "always"
+    ],
+    "object-literal-sort-keys": false,
+    "space-in-parens": [
+      true,
+      "never"
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case",
+      "allow-snake-case"
+    ]
+  }
+}
