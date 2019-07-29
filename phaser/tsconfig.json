@@ -13,7 +13,7 @@
     "noImplicitThis": true,
     "moduleResolution": "node",
     "lib": [
-      "DOM", "ES6"
+      "DOM", "ES6", "scripthost"
     ],
     "typeRoots": [
       "./node_modules/@types",

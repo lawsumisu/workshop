@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack-dev-server --open",
-    "lint": "tsc --noEmit && tslint -p",
+    "lint": "tsc --noEmit && tslint -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "lawsumisu",

@@ -17,7 +17,9 @@
       "options": [
         "debug", "info", "log", "time", "timeEnd", "trace"
       ]
-    }
-
+    },
+    "no-unused-expression": false,
+    "object-literal-sort-keys": false,
+    "quotemark": [true, "single"]
   }
 }
