@@ -6,6 +6,9 @@ const config: Phaser.Types.Core.GameConfig = {
   parent: 'phaser-example',
   width: 800,
   height: 600,
+  input: {
+    gamepad: true,
+  },
   scene: {
     preload,
     create,

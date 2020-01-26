@@ -44,6 +44,9 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: "./index.html"
+    }),
+    new webpack.SourceMapDevToolPlugin({
+      test: /\.(ts|js)($|\?)/i
     })
   ]
 };
