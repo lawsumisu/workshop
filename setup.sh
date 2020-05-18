@@ -5,6 +5,7 @@ webpack()
   echo "Installing Webpack and related libaries..."
   npm i --save-dev webpack webpack-cli webpack-dev-server webpack-config-utils
   npm i --save-dev babel-loader file-loader html-webpack-plugin
+  npm i --save-dev node-sass css-loader sass-loader style-loader
   echo "Done"
 }
 

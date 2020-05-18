@@ -1,0 +1,11 @@
+.cn--controller-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 210px;
+  .controller-display--row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+}

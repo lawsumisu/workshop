@@ -12,16 +12,21 @@ const priority = {
 
 export function updateKeys(): void {
   const inputs = GPR.inputs;
-  const pressedInputs = _.keys(inputs)
-    .filter((key: GamepadInput) => inputs[key].isDown && inputs[key].duration === 1 && buttonsInputs.has(key))
+  const downInputs = _.keys(inputs)
+    .filter((key: GamepadInput) => inputs[key].isDown && buttonsInputs.has(key))
     .sort((a: GamepadInput, b: GamepadInput) => priority[a] - priority[b]);
+  const pressedInputs = _.chain(downInputs)
+    .filter((key: GamepadInput) => inputs[key].duration === 1)
+    .sort((a: GamepadInput, b: GamepadInput) => priority[a] - priority[b])
+    .value();
+  const direction = getDirection(inputs);
   if (pressedInputs.length > 0) {
-    const direction = getDirection(inputs);
     const button = pressedInputs[0];
     const key = keyMap[button][direction - 1];
-    console.log(key);
     dispatchEvent(new CustomEvent('gamepadKeyPress', { detail: key }))
   }
+  dispatchEvent(new CustomEvent('gamepadDirection', { detail: direction - 1}));
+  dispatchEvent(new CustomEvent('gamepadKeyDown', { detail: downInputs }))
 }
 
 function getDirection(inputs: GamepadInfo): number {
@@ -43,7 +48,7 @@ function getDirection(inputs: GamepadInfo): number {
     }, 5);
 }
 
-const keyMap: {[key in GamepadInput]?: [string, string, string, string, string, string, string, string, string]} = {
+export const keyMap: {[key in GamepadInput]?: [string, string, string, string, string, string, string, string, string]} = {
   [GamepadInput.A]: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
   [GamepadInput.X]: ['j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r'],
   [GamepadInput.Y]: ['s', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0'],
