@@ -49,8 +49,9 @@ function getDirection(inputs: GamepadInfo): number {
 }
 
 export const keyMap: {[key in GamepadInput]?: [string, string, string, string, string, string, string, string, string]} = {
-  [GamepadInput.A]: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'],
-  [GamepadInput.X]: ['j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r'],
-  [GamepadInput.Y]: ['s', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0'],
-  [GamepadInput.B]: ['1', '2', '3', '4', '5' ,'6', '7', '8', '9'],
+  [GamepadInput.X]: ['q', 'v', '.', 'l', 'e', '1', 'g', 'b', '6'],
+  [GamepadInput.A]: ['r', 'w', ',', 'm', 'i', '2', 'h', 'c', '7'],
+  [GamepadInput.Y]: ['s', 'x', 'z', 'n', 'a' ,'3', 'j', 'd', '8'],
+  [GamepadInput.B]: ['t', 'y', '?', 'p', 'o', '4', 'k', 'f', '9'],
+  [GamepadInput.R1]: ['', '', '', '', 'u' , '0', '', '', '5']
 };

@@ -1,8 +1,9 @@
-import * as React from "react";
-import { ButtonLayout } from "src/components/buttonLayout";
-import { GamepadInput } from "src/gamepad";
-import { keyMap } from "src/keys";
-import "src/components/controllerDisplay/styles.scss";
+import * as React from 'react';
+import { ButtonLayout, ButtonLayoutProps } from 'src/components/buttonLayout';
+import { GamepadInput } from 'src/gamepad';
+import { keyMap } from 'src/keys';
+import 'src/components/controllerDisplay/styles.scss';
+import { RingDisplay } from 'src/components/ringDisplay';
 
 interface ControllerDisplayProps {
   direction: number;
@@ -11,23 +12,19 @@ interface ControllerDisplayProps {
 
 export class ControllerDisplay extends React.PureComponent<ControllerDisplayProps> {
   public render(): React.ReactNode {
+    const orderedIndices = [0, 1, 2, 5, 8, 7, 6, 3, 4];
     return (
-      <div className="cn--controller-display">
-        <this.ButtonLayoutComponent gamepadInput={GamepadInput.Y} />
-        <div className="controller-display--row">
-          <this.ButtonLayoutComponent gamepadInput={GamepadInput.X} />
-          <this.ButtonLayoutComponent gamepadInput={GamepadInput.B} />
-        </div>
-        <this.ButtonLayoutComponent gamepadInput={GamepadInput.A} />
-      </div>
+      <RingDisplay className="cn--controller-display" radius={100} startTheta={3/4 * Math.PI} clockwise={true} center={8}>
+        { orderedIndices.map((i: number) => {
+          const keys = [GamepadInput.A, GamepadInput.B, GamepadInput.X, GamepadInput.Y, GamepadInput.R1].reduce((output, k) => {
+            output[k] = keyMap[k]![i];
+            return output;
+          }, {} as ButtonLayoutProps['keys']);
+          return (
+            <ButtonLayout key={i} keys={keys} isFocused={i === this.props.direction} downKeys={{}}/>
+          )
+        })}
+      </RingDisplay>
     );
   }
-
-  private ButtonLayoutComponent = (props: { gamepadInput: GamepadInput; }) => (
-    <ButtonLayout
-      keys={keyMap[props.gamepadInput]!}
-      direction={this.props.direction}
-      isDown={this.props.downKeys.includes(props.gamepadInput)}
-    />
-  );
 }

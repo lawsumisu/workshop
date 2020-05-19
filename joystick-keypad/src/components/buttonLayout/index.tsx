@@ -1,36 +1,32 @@
-import * as React from "react";
-import * as _ from "lodash";
-import cx from "classnames";
-import "src/components/buttonLayout/styles.scss";
+import * as React from 'react';
+import * as _ from 'lodash';
+import cx from 'classnames';
+import { GamepadInput } from 'src/gamepad';
+import 'src/components/buttonLayout/styles.scss';
+import { RingDisplay } from 'src/components/ringDisplay';
 
-interface ButtonLayoutProps {
-  keys: [
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string
-  ];
-  direction: number;
-  isDown: boolean;
+export interface ButtonLayoutProps {
+  keys: {
+    [GamepadInput.A]: string;
+    [GamepadInput.B]: string;
+    [GamepadInput.X]: string;
+    [GamepadInput.Y]: string;
+    [GamepadInput.R1]?: string;
+  }
+  downKeys: {
+    [key in GamepadInput]?: boolean;
+  }
+  isFocused?: boolean;
 }
 
 interface ButtonLayoutState {
   radius: number;
 }
 
-function interpolate(start: number, stop: number, t: number): number {
-  return start * (1 - t) + stop * t;
-}
-
 interface KeyProps {
   text: string;
   isHovered: boolean;
-  isSelected: boolean;
+  isSelected?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -64,30 +60,22 @@ export class ButtonLayout extends React.PureComponent<
 
   public render(): React.ReactNode {
     const { radius } = this.state;
-    const { keys, direction, isDown } = this.props;
-    const orderedKeyIndices = [0, 1, 2, 5, 8, 7, 6, 3];
+    const { keys, isFocused = false, downKeys } = this.props;
+    const orderedKeys = [GamepadInput.X, GamepadInput.Y, GamepadInput.B, GamepadInput.A, GamepadInput.R1];
+    const center = !_.isEmpty(keys[GamepadInput.R1]) ? 4 : undefined;
     return (
-      <div ref={this.onRef} className="cn--button-layout">
-        <Key text={keys[4]} isHovered={direction === 4} isSelected={isDown}/>
-        {_.map(orderedKeyIndices, (i: number, index) => {
-          const t = index / orderedKeyIndices.length;
-          const angleStart = (3 / 4) * Math.PI;
-          const theta = interpolate(angleStart, angleStart - Math.PI * 2, t);
-          const style = {
-            transform: `rotate(${theta}rad) translate(${radius}px) rotate(${-theta}rad)`,
-          };
+      <RingDisplay forwardedRef={this.onRef} className="cn--button-layout" radius={radius} startTheta={Math.PI} center={center}>
+        {orderedKeys.filter((k: string) => !_.isEmpty(keys[k])).map((k: string, index) => {
           return (
             <Key
-              className="mod--ring"
               key={index}
-              style={style}
-              text={keys[i]}
-              isHovered={i === direction}
-              isSelected={isDown}
+              text={keys[k]}
+              isHovered={isFocused}
+              isSelected={downKeys[k]}
             />
           );
         })}
-      </div>
+      </RingDisplay>
     );
   }
 

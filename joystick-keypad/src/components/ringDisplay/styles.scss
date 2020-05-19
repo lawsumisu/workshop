@@ -1,0 +1,11 @@
+.cn--ring-display {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .ring-display--elem {
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+  }
+}
