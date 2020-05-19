@@ -12,10 +12,10 @@ export interface ButtonLayoutProps {
     [GamepadInput.X]: string;
     [GamepadInput.Y]: string;
     [GamepadInput.R1]?: string;
-  }
+  };
   downKeys: {
     [key in GamepadInput]?: boolean;
-  }
+  };
   isFocused?: boolean;
 }
 
@@ -36,9 +36,9 @@ class Key extends React.PureComponent<KeyProps> {
     return (
       <div
         className={cx(
-          "button-layout--key",
-          this.props.isHovered && "mod--hovered",
-          this.props.isSelected && this.props.isHovered && "mod-selected",
+          'button-layout--key',
+          this.props.isHovered && 'mod--hovered',
+          this.props.isSelected && this.props.isHovered && 'mod-selected',
           this.props.className
         )}
         style={this.props.style}
@@ -48,10 +48,7 @@ class Key extends React.PureComponent<KeyProps> {
     );
   }
 }
-export class ButtonLayout extends React.PureComponent<
-  ButtonLayoutProps,
-  ButtonLayoutState
-> {
+export class ButtonLayout extends React.PureComponent<ButtonLayoutProps, ButtonLayoutState> {
   public state = {
     radius: 1,
   };
@@ -64,17 +61,18 @@ export class ButtonLayout extends React.PureComponent<
     const orderedKeys = [GamepadInput.X, GamepadInput.Y, GamepadInput.B, GamepadInput.A, GamepadInput.R1];
     const center = !_.isEmpty(keys[GamepadInput.R1]) ? 4 : undefined;
     return (
-      <RingDisplay forwardedRef={this.onRef} className="cn--button-layout" radius={radius} startTheta={Math.PI} center={center}>
-        {orderedKeys.filter((k: string) => !_.isEmpty(keys[k])).map((k: string, index) => {
-          return (
-            <Key
-              key={index}
-              text={keys[k]}
-              isHovered={isFocused}
-              isSelected={downKeys[k]}
-            />
-          );
-        })}
+      <RingDisplay
+        forwardedRef={this.onRef}
+        className="cn--button-layout"
+        radius={radius}
+        startTheta={Math.PI}
+        center={center}
+      >
+        {orderedKeys
+          .filter((k: string) => !_.isEmpty(keys[k]))
+          .map((k: string, index) => {
+            return <Key key={index} text={keys[k]} isHovered={isFocused} isSelected={downKeys[k]} />;
+          })}
       </RingDisplay>
     );
   }

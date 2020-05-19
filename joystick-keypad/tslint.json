@@ -32,7 +32,7 @@
       "import-sources-order": "any",
       "named-imports-order": "case-insensitive"
     }],
-    "quotemark": [true, "single", "jsx-double"],
+    "quotemark": [true, "single"],
     "no-angle-bracket-type-assertion": false,
 
     "no-relative-imports": true,

@@ -1,42 +1,41 @@
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
 export enum GamepadInput {
-  A = "A",
-  B = "B",
-  X = "X",
-  Y = "Y",
-  L1 = "L1",
-  R1 = "R1",
-  L2 = "L2",
-  R2 = "R2",
-  UP = "UP",
-  DOWN = "DOWN",
-  LEFT = "LEFT",
-  RIGHT = "RIGHT",
-  NONE = "NONE",
+  A = 'A',
+  B = 'B',
+  X = 'X',
+  Y = 'Y',
+  L1 = 'L1',
+  R1 = 'R1',
+  L2 = 'L2',
+  R2 = 'R2',
+  UP = 'UP',
+  DOWN = 'DOWN',
+  LEFT = 'LEFT',
+  RIGHT = 'RIGHT',
+  NONE = 'NONE',
 }
 
-export const buttonsInputs = [
+export type ButtonInput = GamepadInput.A | GamepadInput.B | GamepadInput.Y | GamepadInput.X | GamepadInput.R1 | GamepadInput.R2;
+export type DirectionInput = GamepadInput.DOWN | GamepadInput.UP | GamepadInput.LEFT | GamepadInput.RIGHT;
+
+function toSet<T>(list: Array<T>): Set<T> {
+  return list.reduce((set, item: T) => {
+    set.add(item);
+    return set;
+  }, new Set<T>());
+}
+
+export const buttonInputs = toSet([
   GamepadInput.A,
   GamepadInput.B,
   GamepadInput.X,
   GamepadInput.Y,
   GamepadInput.R1,
   GamepadInput.R2,
-].reduce((set, button: GamepadInput) => {
-  set.add(button);
-  return set;
-}, new Set<GamepadInput>());
+]);
 
-export const directionInputs = [
-  GamepadInput.DOWN,
-  GamepadInput.UP,
-  GamepadInput.LEFT,
-  GamepadInput.RIGHT,
-].reduce((set: Set<GamepadInput>, button: GamepadInput) => {
-  set.add(button);
-  return set;
-}, new Set<GamepadInput>());
+export const directionInputs = toSet([GamepadInput.DOWN, GamepadInput.UP, GamepadInput.LEFT, GamepadInput.RIGHT]);
 
 export type GamepadInfo = {
   [key in GamepadInput]: {
@@ -66,6 +65,7 @@ class GamepadReader {
   ];
 
   private inputState: GamepadInfo;
+  private cachedInfo: GamepadInfo | null = null;
 
   constructor() {
     this.clear();
@@ -87,6 +87,7 @@ class GamepadReader {
         };
       });
     }
+    this.cachedInfo = null;
   }
 
   public clear(): void {
@@ -98,17 +99,18 @@ class GamepadReader {
       },
       {}
     ) as GamepadInfo;
+    this.cachedInfo = null;
   }
 
   public get inputs(): GamepadInfo {
-    return _.reduce(
+    return this.cachedInfo === null ? _.reduce(
       this.inputState,
       (accumulator, value, key) => {
         accumulator[key] = { ...value };
         return accumulator;
       },
       {}
-    ) as GamepadInfo;
+    ) as GamepadInfo : this.cachedInfo;
   }
 }
 
