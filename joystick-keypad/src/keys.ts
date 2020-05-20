@@ -10,8 +10,27 @@ const priority = {
   [GamepadInput.R2]: 5,
 };
 
+export enum GPKeyEvent {
+  INSERT_KEY_PRESS = 'INSERT_KEY_PRESS',
+  INSERT_KEY_DIRECTION = 'INSERT_KEY_DIRECTION',
+  SELECT_KEY_DIRECTION = 'SELECT_KEY_DIRECTION'
+}
+enum Mode {
+  INSERT = 'INSERT',
+  SELECT = 'SELECT',
+}
+
+let mode: Mode = Mode.INSERT;
+
 export function updateKeys(): void {
   const inputs = GPR.inputs;
+  if (inputs.R2.isDown && inputs.X.isDown && (inputs.R2.duration === 1 || inputs.X.duration === 1)) {
+    mode = Mode.INSERT;
+    return;
+  } else if (inputs.R2.isDown && inputs.Y.isDown && (inputs.R2.duration === 1 || inputs.Y.duration === 1)) {
+    mode = Mode.SELECT;
+    return;
+  }
   const downInputs = _.keys(inputs)
     .filter((key: GamepadInput) => inputs[key].isDown && buttonInputs.has(key))
     .sort((a: GamepadInput, b: GamepadInput) => priority[a] - priority[b]) as ButtonInput[];
@@ -20,13 +39,33 @@ export function updateKeys(): void {
     .sort((a: GamepadInput, b: GamepadInput) => priority[a] - priority[b])
     .value();
   const direction = getDirection(inputs);
-  if (pressedInputs.length > 0) {
-    const button: ButtonInput = pressedInputs[0];
-    dispatchEvent(new CustomEvent('gamepadKeyPress', { detail: getKey(button, direction) }));
+
+  switch(mode) {
+    case Mode.INSERT: {
+      if (pressedInputs.length > 0) {
+        const button: ButtonInput = pressedInputs[0];
+        dispatchEvent(new CustomEvent('gamepadKeyPress', { detail: getKey(button, direction) }));
+      }
+      dispatchEvent(new CustomEvent('gamepadDirection', { detail: direction - 1 }));
+      dispatchEvent(new CustomEvent('gamepadKeyDown', { detail: downInputs }));
+      break;
+    }
+    case Mode.SELECT: {
+      const isActiveSelection = inputs.X.isDown;
+      _.forEach(inputs, (value: { duration: number; isDown: boolean }, key: GamepadInput ) => {
+        if (value.isDown && directionInputs.has(key)) {
+          dispatchKeyEvent(GPKeyEvent.SELECT_KEY_DIRECTION, { key, isActiveSelection })
+        }
+      });
+      break;
+    }
   }
-  dispatchEvent(new CustomEvent('gamepadDirection', { detail: direction - 1 }));
-  dispatchEvent(new CustomEvent('gamepadKeyDown', { detail: downInputs }));
 }
+
+const dispatchKeyEvent = _.throttle(<T>(name: GPKeyEvent, detail: T) => {
+  console.log(`Dispatching: ${name}`);
+  dispatchEvent(new CustomEvent(name, { detail }));
+}, 50, { leading: true, trailing: false });
 
 function getDirection(inputs: GamepadInfo): number {
   return _.keys(inputs)

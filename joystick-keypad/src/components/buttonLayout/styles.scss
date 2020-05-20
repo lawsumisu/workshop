@@ -1,20 +1,27 @@
 .cn--button-layout {
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   display: flex;
   align-items: center;
   justify-content: center;
   .button-layout--key {
+    width: 20px;
+    height: 20px;
+    &.mod--face {
+      border-radius: 50%;
+    }
+    &.mod--shoulder {
+      width: 30px;
+      height: 15px;
+    }
     &.mod--hovered{
       background-color: rgba(0,255,255, .5);
     }
     &.mod-selected {
       background-color: rgba(11, 156, 49, .5);
     }
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
+
     display: flex;
     align-items: center;
     justify-content: center;

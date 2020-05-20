@@ -29,14 +29,20 @@ interface KeyProps {
   isSelected?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  type: 'face' | 'shoulder';
 }
 
 class Key extends React.PureComponent<KeyProps> {
+  public static defaultProps = {
+    type: 'face',
+  };
+
   public render(): React.ReactNode {
     return (
       <div
         className={cx(
           'button-layout--key',
+          `mod--${this.props.type}`,
           this.props.isHovered && 'mod--hovered',
           this.props.isSelected && this.props.isHovered && 'mod-selected',
           this.props.className
@@ -71,7 +77,15 @@ export class ButtonLayout extends React.PureComponent<ButtonLayoutProps, ButtonL
         {orderedKeys
           .filter((k: string) => !_.isEmpty(keys[k]))
           .map((k: string, index) => {
-            return <Key key={index} text={keys[k]} isHovered={isFocused} isSelected={downKeys[k]} />;
+            return (
+              <Key
+                key={index}
+                text={keys[k]}
+                isHovered={isFocused}
+                isSelected={downKeys[k]}
+                type={k === GamepadInput.R1 ? 'shoulder' : 'face'}
+              />
+            );
           })}
       </RingDisplay>
     );
