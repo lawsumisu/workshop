@@ -16,7 +16,7 @@ export enum GamepadInput {
   NONE = 'NONE',
 }
 
-export type ButtonInput = GamepadInput.A | GamepadInput.B | GamepadInput.Y | GamepadInput.X | GamepadInput.R1 | GamepadInput.R2;
+export type ButtonInput = GamepadInput.A | GamepadInput.B | GamepadInput.Y | GamepadInput.X | GamepadInput.R1;
 export type DirectionInput = GamepadInput.DOWN | GamepadInput.UP | GamepadInput.LEFT | GamepadInput.RIGHT;
 
 function toSet<T>(list: Array<T>): Set<T> {
@@ -32,13 +32,13 @@ export const buttonInputs = toSet([
   GamepadInput.X,
   GamepadInput.Y,
   GamepadInput.R1,
-  GamepadInput.R2,
 ]);
 
 export const directionInputs = toSet([GamepadInput.DOWN, GamepadInput.UP, GamepadInput.LEFT, GamepadInput.RIGHT]);
 
 export type GamepadInfo = {
   [key in GamepadInput]: {
+    previousDuration: number;
     duration: number;
     isDown: boolean;
   };
@@ -77,13 +77,17 @@ class GamepadReader {
       const gamepad = gamepads[0];
       _.forEach(GamepadReader.inputs, (input: GamepadInput, index: number) => {
         let isDown = gamepad.buttons[index].pressed;
-        if (this.inputState[input].isDown !== isDown) {
+        const isButtonTransitioning = this.inputState[input].isDown !== isDown;
+        const { duration: previousDurationOnTransition } = this.inputState[input];
+        if (isButtonTransitioning) {
           // Input was either just pressed or just released, so reset duration
-          this.inputState[input].duration = 0;
+          this.inputState[input].duration = 0
         }
+        const { duration, previousDuration } = this.inputState[input];
         this.inputState[input] = {
           isDown,
-          duration: this.inputState[input].duration + 1,
+          previousDuration: isButtonTransitioning ? previousDurationOnTransition : previousDuration,
+          duration: duration + 1,
         };
       });
     }
@@ -94,7 +98,7 @@ class GamepadReader {
     this.inputState = _.reduce(
       GamepadInput,
       (accumulator, input: GamepadInput) => {
-        accumulator[input] = { duration: 0, isDown: false };
+        accumulator[input] = { duration: 0, isDown: false, previousDuration: 0 };
         return accumulator;
       },
       {}
@@ -111,6 +115,15 @@ class GamepadReader {
       },
       {}
     ) as GamepadInfo : this.cachedInfo;
+  }
+
+  public isPressed(key: GamepadInput): boolean {
+    return this.inputs[key].isDown && this.inputs[key].duration === 1;
+  }
+
+  public isReleased(key: GamepadInput, window = 1): boolean {
+    const input = this.inputs[key];
+    return !input.isDown && input.duration === 1 && input.previousDuration <= window && input.previousDuration > 0;
   }
 }
 

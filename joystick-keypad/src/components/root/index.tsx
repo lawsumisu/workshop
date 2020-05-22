@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as _ from 'lodash';
 import { ControllerDisplay } from 'src/components/controllerDisplay';
 import 'src/components/root/styles.scss';
 import { GPKeyEvent, KeyAction } from 'src/keys';
@@ -39,10 +40,7 @@ export class Root extends React.PureComponent<{}, RootState> {
   public render(): React.ReactNode {
     return (
       <div className="cn--root">
-        <div>
-          <div>Mode:</div>
-          <input ref={this.onRef} value={this.state.text} onChange={this.onChange} />
-        </div>
+        <input ref={this.onRef} value={this.state.text} onChange={this.onChange} />
         <ControllerDisplay direction={this.state.direction} downKeys={this.state.downKeys} />
       </div>
     );
@@ -62,19 +60,26 @@ export class Root extends React.PureComponent<{}, RootState> {
     if (this.ref && this.ref === document.activeElement) {
       let { text } = this.state;
       const selectionStart = this.ref.selectionStart || 0;
-      const selectionEnd = this.ref.selectionEnd || this.state.text.length;
+      const selectionEnd = _.isNumber(this.ref.selectionEnd) ? this.ref.selectionEnd : this.state.text.length;
+      const hasActiveSelection = selectionStart < selectionEnd;
       let precursorText = text.slice(0, selectionStart);
       let postcursorText = text.slice(selectionEnd);
       switch (e.detail) {
         case KeyAction.ENTER:
           precursorText += ' ';
           break;
-        case KeyAction.BACKSPACE:
-          precursorText = precursorText.substring(0, precursorText.length - 1);
+        case KeyAction.BACKSPACE: {
+          if (!hasActiveSelection) {
+            precursorText = precursorText.substring(0, precursorText.length - 1);
+          }
           break;
-        case KeyAction.DELETE:
-          postcursorText = postcursorText.substring(1);
+        }
+        case KeyAction.DELETE: {
+          if (!hasActiveSelection) {
+            postcursorText = postcursorText.substring(1);
+          }
           break;
+        }
         default:
           precursorText += e.detail;
           break;
@@ -83,7 +88,10 @@ export class Root extends React.PureComponent<{}, RootState> {
         text: precursorText + postcursorText,
       }, () => {
         if (this.ref) {
-          const i = e.detail === KeyAction.BACKSPACE ? -1 : (e.detail === KeyAction.DELETE ? 0 : 1);
+          let i = 0;
+          if (!hasActiveSelection) {
+            i = e.detail === KeyAction.BACKSPACE ? -1 : (e.detail === KeyAction.DELETE ? 0 : 1);
+          }
           this.ref.selectionStart = selectionStart + i;
           this.ref.selectionEnd = this.ref.selectionStart;
         }
