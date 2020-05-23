@@ -1,0 +1,168 @@
+{
+  "EN": [
+    {
+      "X": {
+        "default": "s",
+        "shift1": "S"
+      },
+      "A": {
+        "default": "t",
+        "shift1": "T"
+      },
+      "B": {
+        "default": "u",
+        "shift1": "U"
+      },
+      "Y": {
+        "default": "v",
+        "shift1": "V"
+      }
+    },
+    {
+      "X": {
+        "default": "w",
+        "shift1": "W"
+      },
+      "A": {
+        "default": "x",
+        "shift1": "X"
+      },
+      "B": {
+        "default": "y",
+        "shift1": "Y"
+      },
+      "Y": {
+        "default": "z",
+        "shift1": "Z"
+      }
+    },
+    {
+      "X": {
+        "default": "."
+      },
+      "Y": {
+        "default": ","
+      },
+      "A": {
+        "default": "?"
+      },
+      "B": {
+        "default": "!"
+      }
+    },
+    {
+      "X": {
+        "default": "n",
+        "shift1": "N"
+      },
+      "A": {
+        "default": "o",
+        "shift1": "O"
+      },
+      "B": {
+        "default": "p",
+        "shift1": "P"
+      },
+      "Y": {
+        "default": "q",
+        "shift1": "Q"
+      },
+      "R1": {
+        "default": "r",
+        "shift1": "R"
+      }
+    },
+    {
+      "X": {
+        "default": "a",
+        "shift1": "A"
+      },
+      "A": {
+        "default": "b",
+        "shift1": "B"
+      },
+      "B": {
+        "default": "c",
+        "shift1": "C"
+      },
+      "Y": {
+        "default": "d",
+        "shift1": "D"
+      },
+      "R1": {
+        "default": "e",
+        "shift1": "E"
+      }
+    },
+    {
+      "X": {
+        "default": "1"
+      },
+      "A": {
+        "default": "2"
+      },
+      "B": {
+        "default": "3"
+      },
+      "Y": {
+        "default": "4"
+      },
+      "R1": {
+        "default": "5"
+      }
+    },
+    {
+      "X": {
+        "default": "j",
+        "shift1": "J"
+      },
+      "A": {
+        "default": "k",
+        "shift1": "K"
+      },
+      "B": {
+        "default": "l",
+        "shift1": "L"
+      },
+      "Y": {
+        "default": "m",
+        "shift1": "M"
+      }
+    },
+    {
+      "X": {
+        "default": "f",
+        "shift1": "F"
+      },
+      "A": {
+        "default": "g",
+        "shift1": "G"
+      },
+      "B": {
+        "default": "h",
+        "shift1": "H"
+      },
+      "Y": {
+        "default": "i",
+        "shift1": "I"
+      }
+    },
+    {
+      "X": {
+        "default": "6"
+      },
+      "A": {
+        "default": "7"
+      },
+      "B": {
+        "default": "8"
+      },
+      "Y": {
+        "default": "9"
+      },
+      "R1": {
+        "default": "0"
+      }
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import { ButtonInput, buttonInputs, directionInputs, GamepadInfo, GamepadInput, GPR } from 'src/gamepad';
 import * as _ from 'lodash';
+import config from 'src/config.json';
 
 const priority = {
   [GamepadInput.A]: 1,
@@ -94,190 +95,18 @@ interface KeySetting {
   shift2?: string;
 }
 
-const keyMap: {
-  [key in KeyInput]: [
-    KeySetting,
-    KeySetting,
-    KeySetting,
-    KeySetting,
-    KeySetting,
-    KeySetting,
-    KeySetting,
-    KeySetting,
-    KeySetting
-    ];
-} = {
-  [GamepadInput.X]: [
-    {
-      default: 'q',
-      shift1: 'Q',
-    },
-    {
-      default: 'v',
-      shift1: 'V',
-    },
-    {
-      default: '.',
-    },
-    {
-      default: 'l',
-      shift1: 'L',
-    },
-    {
-      default: 'e',
-      shift1: 'E',
-    },
-    {
-      default: '1',
-    },
-    {
-      default: 'g',
-      shift1: 'G',
-    },
-    {
-      default: 'b',
-      shift1: 'B',
-    },
-    {
-      default: '6',
-    },
-  ],
-  [GamepadInput.A]: [
-    {
-      default: 'r',
-      shift1: 'R',
-    },
-    {
-      default: 'w',
-      shift1: 'W',
-    },
-    {
-      default: ',',
-    },
-    {
-      default: 'm',
-      shift1: 'M',
-    },
-    {
-      default: 'i',
-      shift1: 'I',
-    },
-    {
-      default: '2',
-    },
-    {
-      default: 'h',
-      shift1: 'H',
-    },
-    {
-      default: 'c',
-      shift1: 'C',
-    },
-    {
-      default: '7',
-    },
-  ],
-  [GamepadInput.Y]: [
-    {
-      default: 's',
-      shift1: 'S',
-    },
-    {
-      default: 'x',
-      shift1: 'X',
-    },
-    {
-      default: 'z',
-      shift1: 'Z'
-    },
-    {
-      default: 'n',
-      shift1: 'N',
-    },
-    {
-      default: 'a',
-      shift1: 'A',
-    },
-    {
-      default: '3',
-    },
-    {
-      default: 'j',
-      shift1: 'J',
-    },
-    {
-      default: 'd',
-      shift1: 'D',
-    },
-    {
-      default: '8',
-    },
-  ],
-  [GamepadInput.B]: [
-    {
-      default: 't',
-      shift1: 'T',
-    },
-    {
-      default: 'y',
-      shift1: 'Y',
-    },
-    {
-      default: '?',
-    },
-    {
-      default: 'p',
-      shift1: 'P',
-    },
-    {
-      default: 'o',
-      shift1: 'O',
-    },
-    {
-      default: '4',
-    },
-    {
-      default: 'k',
-      shift1: 'K',
-    },
-    {
-      default: 'f',
-      shift1: 'F',
-    },
-    {
-      default: '9',
-    },
-  ],
-  [GamepadInput.R1]: [
-    {
-      default: '',
-    },
-    {
-      default: '',
-    },
-    {
-      default: '',
-    },
-    {
-      default: '',
-    },
-    {
-      default: 'u',
-      shift1: 'U'
-    },
-    {
-      default: '0',
-    },
-    {
-      default: '',
-    },
-    {
-      default: '',
-    },
-    {
-      default: '5',
-    },
-  ]
+type KeyConfig = {
+  EN: [
+    { [input in KeyInput]?: KeySetting; },
+    { [input in KeyInput]?: KeySetting; },
+    { [input in KeyInput]?: KeySetting; },
+    { [input in KeyInput]?: KeySetting; },
+    { [input in KeyInput]?: KeySetting; },
+    { [input in KeyInput]?: KeySetting; },
+    { [input in KeyInput]?: KeySetting; },
+    { [input in KeyInput]?: KeySetting; },
+    { [input in KeyInput]?: KeySetting; }
+  ];
 };
 
 export enum KeyAction {
@@ -287,9 +116,10 @@ export enum KeyAction {
 }
 
 export function getKey(button: ButtonInput, direction: number): string {
+  const keyMap = config as KeyConfig;
   const S1 = GPR.inputs.L1.isDown;
-  const key = keyMap[button][direction - 1];
-  return (S1 && key.shift1) || key.default;
+  const key = keyMap.EN[direction - 1][button];
+  return key && ((S1 && key.shift1) || key.default) || "";
 }
 
 function getConfirmationKey(): KeyAction | null {
