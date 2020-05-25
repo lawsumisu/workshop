@@ -38,16 +38,29 @@
     },
     {
       "X": {
-        "default": "."
+        "default": ".",
+        "shift1": "/",
+        "shift2": "<"
       },
       "Y": {
-        "default": ","
+        "default": ",",
+        "shift1": "'",
+        "shift2": "+"
       },
       "A": {
-        "default": "?"
+        "default": "?",
+        "shift1": ";",
+        "shift2": "-"
       },
       "B": {
-        "default": "!"
+        "default": "!",
+        "shift1": ":",
+        "shift2": ">"
+      },
+      "R1": {
+        "default": "@",
+        "shift1": "\"",
+        "shift2": "="
       }
     },
     {

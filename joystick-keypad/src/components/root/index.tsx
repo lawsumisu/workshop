@@ -23,7 +23,7 @@ export class Root extends React.PureComponent<{}, RootState> {
   private isHighlightLeft = false;
 
   public componentDidMount(): void {
-    window.addEventListener('gamepadKeyPress', this.gamepadKeyPressListener);
+    window.addEventListener(GPKeyEvent.INSERT_KEY_PRESS, this.gamepadKeyPressListener);
     window.addEventListener('gamepadDirection', this.gamepadDirectionListener);
     window.addEventListener('gamepadKeyDown', this.gamepadKeyDownListener);
     window.addEventListener(GPKeyEvent.SELECT_KEY_DIRECTION, this.selectDirectionListener);
@@ -31,7 +31,7 @@ export class Root extends React.PureComponent<{}, RootState> {
   }
 
   public componentWillUnmount(): void {
-    window.removeEventListener('gamepadKeyPress', this.gamepadKeyPressListener);
+    window.removeEventListener(GPKeyEvent.INSERT_KEY_PRESS, this.gamepadKeyPressListener);
     window.removeEventListener('gamepadDirection', this.gamepadDirectionListener);
     window.removeEventListener('gamepadKeyDown', this.gamepadKeyDownListener);
     window.removeEventListener(GPKeyEvent.SELECT_KEY_DIRECTION, this.selectDirectionListener);
