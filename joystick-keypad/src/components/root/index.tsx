@@ -84,31 +84,39 @@ export class Root extends React.PureComponent<{}, RootState> {
           precursorText += e.detail;
           break;
       }
-      this.setState({
-        text: precursorText + postcursorText,
-      }, () => {
-        if (this.ref) {
-          let i = 0;
-          if (!hasActiveSelection) {
-            i = e.detail === KeyAction.BACKSPACE ? -1 : (e.detail === KeyAction.DELETE ? 0 : 1);
+      const newText = precursorText + postcursorText;
+      if (text !== newText) {
+        this.setState({
+          text: newText,
+        }, () => {
+          if (this.ref) {
+            let i = 0;
+            if (!hasActiveSelection) {
+              i = e.detail === KeyAction.BACKSPACE ? -1 : (e.detail === KeyAction.DELETE ? 0 : 1);
+            }
+            this.ref.selectionStart = selectionStart + i;
+            this.ref.selectionEnd = this.ref.selectionStart;
           }
-          this.ref.selectionStart = selectionStart + i;
-          this.ref.selectionEnd = this.ref.selectionStart;
-        }
-      });
+        });
+      }
     }
   };
 
   private gamepadDirectionListener = (e: CustomEvent) => {
-    this.setState({
-      direction: e.detail,
-    });
+    if (e.detail !== this.state.direction) {
+      this.setState({
+        direction: e.detail,
+      });
+    }
   };
 
   private gamepadKeyDownListener = (e: CustomEvent) => {
-    this.setState({
-      downKeys: e.detail,
-    });
+    const { downKeys } = this.state;
+    if (downKeys.length !== e.detail.length || this.state.downKeys.some(key => !e.detail.includes(key))) {
+      this.setState({
+        downKeys: e.detail,
+      });
+    }
   };
 
   private selectDirectionListener = (e: CustomEvent<{ key: GamepadInput; isActiveSelection: boolean}>) => {

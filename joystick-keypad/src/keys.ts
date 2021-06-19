@@ -21,17 +21,15 @@ enum Mode {
   SELECT = 'SELECT',
 }
 
+// TODO consider using redux to dispatch actions for when GPR has changed state
 export function updateKeys(): void {
   const inputs = GPR.inputs;
   const mode = inputs.R2.isDown ? Mode.SELECT : Mode.INSERT;
   const downInputs = _.keys(inputs)
-    .filter((key: GamepadInput) => inputs[key].isDown && buttonInputs.has(key))
+    .filter((key: GamepadInput) => inputs[key].isDown)
     .sort((a: GamepadInput, b: GamepadInput) => priority[a] - priority[b]) as ButtonInput[];
-  const pressedInputs = _.chain(downInputs)
-    .filter((key: GamepadInput) => inputs[key].duration === 1)
-    .sort((a: GamepadInput, b: GamepadInput) => priority[a] - priority[b])
-    .value();
-  const direction = getDirection(inputs);
+  const pressedInputs = downInputs.filter((key: GamepadInput) => inputs[key].duration === 1);
+  const direction = getDirection(inputs) - 1;
 
   switch (mode) {
     case Mode.INSERT: {
@@ -39,7 +37,7 @@ export function updateKeys(): void {
         const button: ButtonInput = pressedInputs[0];
         dispatchInsertKeyPressEvent(getKey(button, direction));
       }
-      dispatchEvent(new CustomEvent('gamepadDirection', { detail: direction - 1 }));
+      dispatchEvent(new CustomEvent('gamepadDirection', { detail: direction }));
       dispatchEvent(new CustomEvent('gamepadKeyDown', { detail: downInputs }));
       break;
     }
@@ -133,7 +131,7 @@ interface KeySetting {
 }
 
 type KeyConfig = {
-  EN: [
+  ENx: [
     { [input in KeyInput]?: KeySetting },
     { [input in KeyInput]?: KeySetting },
     { [input in KeyInput]?: KeySetting },
@@ -153,11 +151,23 @@ export enum KeyAction {
 }
 
 export function getKey(button: ButtonInput, direction: number): string {
-  const keyMap = config as KeyConfig;
+  const directionMap = [5,2,6,1,0,3,8,4,7];
+  const buttonMap = {
+    [GamepadInput.X]: 0,
+    [GamepadInput.Y]: 3,
+    [GamepadInput.A]: 1,
+    [GamepadInput.B]: 2,
+    [GamepadInput.R1]: 4,
+  };
+  const { keys, layout } = config.EN;
   const S1 = GPR.inputs.L1.isDown;
   const S2 = GPR.inputs.L2.isDown;
-  const key = keyMap.EN[direction - 1][button];
-  return (key && ((S2 && key.shift2) || (S1 && key.shift1) || key.default)) || '';
+  const d = directionMap[direction];
+  const b = buttonMap[button];
+  const i = d * 5 + b;
+  const key = layout[i];
+  const { shift1, shift2 } = keys[key] || {};
+  return (S2 && shift2) || (S1 && shift1) || key || '';
 }
 
 function getConfirmationKey(): { key: KeyAction | null; isHeld: boolean } {

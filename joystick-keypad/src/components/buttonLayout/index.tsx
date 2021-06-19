@@ -13,9 +13,7 @@ export interface ButtonLayoutProps {
     [GamepadInput.Y]: string;
     [GamepadInput.R1]?: string;
   };
-  downKeys: {
-    [key in GamepadInput]?: boolean;
-  };
+  downKeys: GamepadInput[];
   isFocused?: boolean;
 }
 
@@ -44,7 +42,7 @@ class Key extends React.PureComponent<KeyProps> {
           'button-layout--key',
           `mod--${this.props.type}`,
           this.props.isHovered && 'mod--hovered',
-          this.props.isSelected && this.props.isHovered && 'mod-selected',
+          this.props.isSelected && this.props.isHovered && 'mod--selected',
           this.props.className
         )}
         style={this.props.style}
@@ -65,24 +63,22 @@ export class ButtonLayout extends React.PureComponent<ButtonLayoutProps, ButtonL
     const { radius } = this.state;
     const { keys, isFocused = false, downKeys } = this.props;
     const orderedKeys = [GamepadInput.X, GamepadInput.Y, GamepadInput.B, GamepadInput.A, GamepadInput.R1];
-    const center = !_.isEmpty(keys[GamepadInput.R1]) ? 4 : undefined;
     return (
       <RingDisplay
         forwardedRef={this.onRef}
         className="cn--button-layout"
         radius={radius}
         startTheta={Math.PI}
-        center={center}
+        center={4}
       >
         {orderedKeys
-          .filter((k: string) => !_.isEmpty(keys[k]))
-          .map((k: string, index) => {
+          .map((k: GamepadInput, index) => {
             return (
               <Key
                 key={index}
                 text={keys[k]}
                 isHovered={isFocused}
-                isSelected={downKeys[k]}
+                isSelected={downKeys.includes(k)}
                 type={k === GamepadInput.R1 ? 'shoulder' : 'face'}
               />
             );

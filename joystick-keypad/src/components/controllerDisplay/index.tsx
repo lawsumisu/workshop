@@ -22,14 +22,14 @@ export class ControllerDisplay extends React.PureComponent<ControllerDisplayProp
         center={8}
       >
         {orderedIndices.map((i: number) => {
-          const keys = [GamepadInput.A, GamepadInput.B, GamepadInput.X, GamepadInput.Y, GamepadInput.R1].reduce(
+          const keys = [GamepadInput.X, GamepadInput.A, GamepadInput.B, GamepadInput.Y, GamepadInput.R1].reduce(
             (output: ButtonLayoutProps['keys'], k: ButtonInput) => {
-              output[k] = getKey(k, i + 1);
+              output[k] = getKey(k, i);
               return output;
             },
             {} as ButtonLayoutProps['keys']
           );
-          return <ButtonLayout key={i} keys={keys} isFocused={i === this.props.direction} downKeys={{}} />;
+          return <ButtonLayout key={i} keys={keys} isFocused={i === this.props.direction} downKeys={this.props.downKeys} />;
         })}
       </RingDisplay>
     );
