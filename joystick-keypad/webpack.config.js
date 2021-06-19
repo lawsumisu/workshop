@@ -1,3 +1,4 @@
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -33,6 +34,7 @@ module.exports = {
     ]
   },
   devServer: {
+    open: true,
     hot: true,
     port: 8080,
     contentBase: SRC_DIR,
@@ -44,15 +46,12 @@ module.exports = {
     extensions: ['.js', '.ts', '.tsx', '.jsx']
   },
   plugins: [
-    new webpack.DefinePlugin({
-      CANVAS_RENDERER: JSON.stringify(true),
-      WEBGL_RENDERER: JSON.stringify(true)
-    }),
     new HtmlWebpackPlugin({
       template: "./index.html"
     }),
     new webpack.SourceMapDevToolPlugin({
       test: /\.(ts|js)($|\?)/i
-    })
+    }),
+    new ReactRefreshWebpackPlugin()
   ]
 };
