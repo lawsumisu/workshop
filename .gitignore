@@ -3,3 +3,11 @@
 
 // Node
 node_modules
+
+// Python
+venv
+
+// VSCode
+.vscode
+
+cpp/**/build
